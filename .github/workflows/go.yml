@@ -1,5 +1,9 @@
 name: Go
-on: [push]
+on:
+  push:
+    branches:
+      - master
+      - dev
 jobs:
 
   build:
@@ -23,6 +27,34 @@ jobs:
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
             dep ensure
         fi
+      working-directory: agent
 
     - name: Build
       run: go build -v .
+      working-directory: agent
+      # run: |
+      #   cd agent
+      #   go build -v .
+
+    # - name: Test
+    #   run: test.sh  #If this exits with a nonzero code the action will stop here
+
+    - name: Get current time
+      uses: gerred/actions/current-time@master
+      id: current-time
+
+
+    - name: Docker login
+      uses: actions/docker/login@master
+      env:
+        DOCKER_REGISTRY_URL: "registry.hub.docker.com"
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      # if: success()
+
+    - name: Docker build
+      uses: actions/docker/cli@master
+      with:
+        args: "build -t iexalt/analogsea-kubernetes-agent:dev-continuous-${{ steps.current-time.outputs.time }}  -t iexalt/analogsea-kubernetes-agent:${{ github.sha }} ."
+
+    # - name: Docker push
