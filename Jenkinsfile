@@ -12,10 +12,7 @@ pipeline {
     stage('Build') {
       steps {
         container('docker') {
-          sh 'ls'
-          sh 'docker ps'
-          sh 'echo $BUILD_NUMBER'
-          sh 'docker build -t iexalt/analogsea-kubernetes-agent:dev-continuous-$BUILD_ID -t iexalt/analogsea-kubernetes-agent:$BUILD_TIMESTAMP -t iexalt/analogsea-kubernetes-agent:$GIT_COMMIT .'
+          sh 'docker build -t iexalt/analogsea-kubernetes-agent:$GIT_BRANCH-continuous-$BUILD_ID -t iexalt/analogsea-kubernetes-agent:$BUILD_TIMESTAMP -t iexalt/analogsea-kubernetes-agent:$GIT_COMMIT .'
         }
 
       }
