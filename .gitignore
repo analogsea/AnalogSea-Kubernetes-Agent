@@ -1,3 +1,9 @@
+# Development files
+*.bak
+*_bak
+*.retry
+
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
